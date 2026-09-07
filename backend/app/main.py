@@ -61,9 +61,24 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     )
 
 
-@app.get("/health")
+@app.get("/health", tags=["System"])
 def health():
-    return {"status": "ok", "service": "coolgrid-api"}
+    """Health check endpoint returning service status, version, and environment info."""
+    from .services.ml_registry import get_ml_registry
+    ml_healthy = False
+    try:
+        registry = get_ml_registry()
+        ml_healthy = registry.detection_model is not None
+    except Exception:
+        ml_healthy = False
+
+    return {
+        "status": "ok",
+        "service": "coolgrid-api",
+        "version": "0.1.0",
+        "environment": settings.environment if hasattr(settings, "environment") else "production",
+        "ml_ready": ml_healthy,
+    }
 
 
 API_PREFIX = "/api"
