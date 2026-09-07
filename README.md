@@ -2,6 +2,13 @@
 
 ## AI & Physics-Informed Urban Heat Intelligence Platform
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python)](https://python.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![CI Status](https://github.com/daanialmirza5/Coolgrid-Webverse/actions/workflows/ci.yml/badge.svg)](https://github.com/daanialmirza5/Coolgrid-Webverse/actions)
+
 **Turn Urban Heat Into Action.**
 
 ```
@@ -18,7 +25,7 @@ Not yet deployed to a public URL — see [Deployment](#deployment) for how to ru
 
 ## 💻 GitHub Repository
 
-[github.com/daanialmirza5/coolgrid](https://github.com/daanialmirza5/coolgrid)
+[github.com/daanialmirza5/Coolgrid-Webverse](https://github.com/daanialmirza5/Coolgrid-Webverse)
 
 ## Table of Contents
 
