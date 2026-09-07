@@ -78,7 +78,21 @@ def estimate_lst(
     humidity_pct: float,
     wind_speed_ms: float,
 ) -> EnergyBalanceEstimate:
-    """Estimate land surface temperature from a simplified bulk energy balance."""
+    """Estimate land surface temperature from a simplified bulk energy balance.
+
+    Args:
+        air_temp_c: Ambient near-surface air temperature in degrees Celsius.
+        shortwave_wm2: Downwelling solar shortwave radiation in W/m^2.
+        albedo: Surface reflectance coefficient [0.02, 0.90].
+        green_space_pct: Percentage of ward area covered by vegetation [0, 100].
+        water_body_pct: Percentage of ward area covered by open water [0, 100].
+        built_up_density: Fraction of ward area covered by impervious/built structures [0.0, 1.0].
+        humidity_pct: Relative humidity percentage [0, 100].
+        wind_speed_ms: 10m wind speed in m/s.
+
+    Returns:
+        EnergyBalanceEstimate dataclass containing radiation, flux components, and estimated LST.
+    """
 
     shortwave_wm2 = max(shortwave_wm2, 0.0)
     albedo = _clamp(albedo, 0.02, 0.9)
