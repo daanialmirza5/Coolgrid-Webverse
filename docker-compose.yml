@@ -17,5 +17,14 @@ services:
       timeout: 5s
       retries: 10
 
+    networks:
+      - coolgrid-network
+
+networks:
+  coolgrid-network:
+    name: coolgrid-network
+    driver: bridge
+
 volumes:
   coolgrid_pgdata:
+    name: coolgrid_pgdata
