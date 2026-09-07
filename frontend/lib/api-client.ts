@@ -47,9 +47,29 @@ export function clearTokens() {
 
 export class ApiError extends Error {
   status: number;
-  constructor(status: number, message: string) {
+  data?: unknown;
+
+  constructor(status: number, message: string, data?: unknown) {
     super(message);
+    this.name = "ApiError";
     this.status = status;
+    this.data = data;
+  }
+
+  get isUnauthorized(): boolean {
+    return this.status === 401;
+  }
+
+  get isForbidden(): boolean {
+    return this.status === 403;
+  }
+
+  get isNotFound(): boolean {
+    return this.status === 404;
+  }
+
+  get isServerError(): boolean {
+    return this.status >= 500;
   }
 }
 
