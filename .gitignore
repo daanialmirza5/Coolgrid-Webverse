@@ -1,0 +1,38 @@
+.rocketride/
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Generated ML/demo artifacts (regenerate with `python ml/train.py`)
+data/demo/
+
+# Node / frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/coverage/
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
+node_modules/
+
+# Backend
+backend/*.db
+backend/coolgrid.db
+
+# Reports generated at runtime
+data/generated_reports/
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: coolgrid-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coolgrid}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coolgrid_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-coolgrid}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - coolgrid_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-coolgrid} -d ${POSTGRES_DB:-coolgrid}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  coolgrid_pgdata:
