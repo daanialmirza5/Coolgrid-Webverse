@@ -19,11 +19,11 @@ Built for **Webverse 2026** by a team from Wadia College of Engineering, Pune.
 
 > **DEMO DATA NOTICE**: This application runs entirely on a synthetic, clearly-labeled demonstration dataset for a Pune-*shaped* demo city. No real Landsat, Sentinel-2, ERA5, OpenStreetMap, or census data is used anywhere. The UI labels this everywhere it matters (dashboard badge, data sources page, PDF reports). See [Data Sources](#data-sources) and [docs/DATA.md](docs/DATA.md) for exactly how it's generated and why. The codebase is architected so real providers can be plugged in later with zero changes to the application logic that consumes them — see [providers/factory.py](ml/coolgrid_ml/providers/factory.py).
 
-## 🚀 Live Demo
+## Live Demo
 
 Not yet deployed to a public URL — see [Deployment](#deployment) for how to run it yourself in a few minutes.
 
-## 💻 GitHub Repository
+## GitHub Repository
 
 [github.com/daanialmirza5/Coolgrid-Webverse](https://github.com/daanialmirza5/Coolgrid-Webverse)
 
@@ -102,7 +102,7 @@ This exact journey is codified as an automated end-to-end test: [`frontend/e2e/f
 
 ```mermaid
 flowchart LR
-    A[Demo Data Providers<br/>Satellite · Weather · Urban · Population]
+    A[Demo Data Providers<br/>Satellite • Weather • Urban • Population]
     B[Feature Engineering<br/>City Grid + Training Dataset]
     C[Heat Detection<br/>XGBoost + Quantile Models]
     D[Explainable AI<br/>SHAP Driver Attribution]
