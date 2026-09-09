@@ -29,10 +29,69 @@ function SimulationContent() {
   return <SimulationForWard wardId={wardId} onChangeWard={() => router.push("/simulation")} />;
 }
 
+interface SimulationPreset {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  icon: string;
+  badge: string;
+  coverage: Record<string, number>;
+}
+
+const SIMULATION_PRESETS: SimulationPreset[] = [
+  {
+    id: "cool-roof-program",
+    name: "Reflective Cool Roofs",
+    tagline: "High Albedo / Fast Deploy",
+    description: "Converts 60% of eligible rooftops to high-albedo cool coatings with 20% reflective pavement. Zero land or water requirement.",
+    icon: "🏠",
+    badge: "Zero Water",
+    coverage: { cool_roofs: 60, reflective_surfaces: 20 },
+  },
+  {
+    id: "urban-canopy-expansion",
+    name: "Urban Canopy & Corridors",
+    tagline: "Biophilic Evapotranspiration",
+    description: "Deploys 30% urban street trees, 15% linear vegetation corridors, and 5% blue infrastructure for maximum biological shade and microclimate cooling.",
+    icon: "🌳",
+    badge: "Biophilic",
+    coverage: { urban_trees: 30, vegetation_corridors: 15, blue_infrastructure: 5 },
+  },
+  {
+    id: "high-density-mitigation",
+    name: "Commercial Core Retrofit",
+    tagline: "Balanced Multi-Layer Strategy",
+    description: "Tailored for dense urban wards: 40% cool roofs, 25% green roofs, 15% street trees, and 20% high-albedo pavements.",
+    icon: "🏙️",
+    badge: "High-Density",
+    coverage: { cool_roofs: 40, green_roofs: 25, urban_trees: 15, reflective_surfaces: 20 },
+  },
+  {
+    id: "heatwave-resilience",
+    name: "Emergency Heatwave Shield",
+    tagline: "Aggressive Hotspot Suppression",
+    description: "Emergency package targeting extreme LST: 65% cool roofs, 45% reflective pavements, 25% trees, and 10% evaporative water bodies.",
+    icon: "🔥",
+    badge: "Maximum Cooling",
+    coverage: { cool_roofs: 65, reflective_surfaces: 45, urban_trees: 25, blue_infrastructure: 10 },
+  },
+  {
+    id: "zero-water-conservation",
+    name: "Arid Passive Albedo",
+    tagline: "100% Water-Neutral Mitigation",
+    description: "Strictly water-neutral passive cooling: 75% high-reflectance roof coatings and 50% albedo road treatments for drought-sensitive zones.",
+    icon: "💧",
+    badge: "Arid Resilient",
+    coverage: { cool_roofs: 75, reflective_surfaces: 50 },
+  },
+];
+
 function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeWard: () => void }) {
   const catalog = useApi(() => api.interventions.catalog(), []);
   const ward = useApi(() => api.wards.get(wardId), [wardId]);
   const [coverage, setCoverage] = useState<Record<string, number>>({});
+  const [activePreset, setActivePreset] = useState<string | null>(null);
   const [result, setResult] = useState<SimulationResult | null>(null);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,12 +100,22 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
   if (catalog.error) return <ErrorState message={catalog.error} onRetry={catalog.reload} />;
   if (!catalog.data || !ward.data) return null;
 
+  function applyPreset(preset: SimulationPreset) {
+    setActivePreset(preset.id);
+    const newCoverage: Record<string, number> = {};
+    for (const [key, val] of Object.entries(preset.coverage)) {
+      newCoverage[key] = val;
+    }
+    setCoverage(newCoverage);
+    setError(null);
+  }
+
   async function runSimulation() {
     const interventions = Object.entries(coverage)
       .filter(([, v]) => v > 0)
       .map(([type, coverage_pct]) => ({ type: type as InterventionType, coverage_pct }));
     if (interventions.length === 0) {
-      setError("Set at least one intervention above 0% coverage.");
+      setError("Set at least one intervention above 0% coverage or pick a preset above.");
       return;
     }
     setError(null);
@@ -73,17 +142,92 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">Simulate Interventions — {ward.data.name}</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Adjust coverage for each intervention type and run the physics-based simulation.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Choose a recruiter/planner preset or adjust coverage for physics-based cooling simulation.</p>
         </div>
         <Button variant="outline" size="sm" onClick={onChangeWard}>
           Change ward
         </Button>
       </div>
 
+      {/* Interactive Scenario Presets */}
+      <Card className="border-emerald-200/50 bg-slate-50/50 dark:border-emerald-900/30 dark:bg-slate-900/30">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base flex items-center gap-2">
+                <span>🎯</span> Interactive Scenario Presets (Zero-Config Testing)
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Select an urban climate intervention package to automatically configure parameters across the physics engine.
+              </CardDescription>
+            </div>
+            {activePreset && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-slate-500"
+                onClick={() => {
+                  setActivePreset(null);
+                  setCoverage({});
+                }}
+              >
+                Reset to Custom
+              </Button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
+            {SIMULATION_PRESETS.map((p) => {
+              const isSelected = activePreset === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => applyPreset(p)}
+                  className={`flex flex-col justify-between rounded-lg border p-3 text-left transition-all ${
+                    isSelected
+                      ? "border-emerald-500 bg-emerald-50/70 shadow-sm dark:border-emerald-400 dark:bg-emerald-950/40"
+                      : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900"
+                  }`}
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg">{p.icon}</span>
+                      <span
+                        className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                          isSelected
+                            ? "bg-emerald-200 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300"
+                            : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                        }`}
+                      >
+                        {p.badge}
+                      </span>
+                    </div>
+                    <div className="font-semibold text-xs text-slate-900 dark:text-slate-100">{p.name}</div>
+                    <div className="text-[11px] text-slate-500 line-clamp-2">{p.description}</div>
+                  </div>
+                  <div className="mt-2 text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
+                    {isSelected ? "✓ Active Preset" : "Apply Preset →"}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Intervention coverage</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Intervention Coverage Sliders</CardTitle>
+              {activePreset && (
+                <span className="text-xs text-emerald-600 font-medium dark:text-emerald-400">
+                  Customizing: {SIMULATION_PRESETS.find((p) => p.id === activePreset)?.name}
+                </span>
+              )}
+            </div>
             <CardDescription>Coverage is the % of the ward&apos;s eligible surface converted to each intervention.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -91,14 +235,17 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
               <div key={item.type} className="space-y-1.5">
                 <div className="flex items-center justify-between text-sm">
                   <label className="font-medium">{item.label}</label>
-                  <span className="tabular-nums text-slate-500">{coverage[item.type] ?? 0}%</span>
+                  <span className="tabular-nums text-slate-500 font-semibold">{coverage[item.type] ?? 0}%</span>
                 </div>
                 <Slider
                   min={0}
                   max={item.max_coverage_pct}
                   step={1}
                   value={coverage[item.type] ?? 0}
-                  onChange={(e) => setCoverage((c) => ({ ...c, [item.type]: Number(e.target.value) }))}
+                  onChange={(e) => {
+                    setActivePreset(null);
+                    setCoverage((c) => ({ ...c, [item.type]: Number(e.target.value) }));
+                  }}
                 />
                 <p className="text-xs text-slate-400">{item.description}</p>
               </div>
@@ -106,7 +253,7 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
             {error && <Alert variant="destructive">{error}</Alert>}
             <Button className="w-full gap-2" onClick={runSimulation} disabled={running}>
               <FlaskConical className="h-4 w-4" />
-              {running ? "Simulating..." : "Run simulation"}
+              {running ? "Simulating with Physics Engine..." : "Run Physics Simulation"}
             </Button>
           </CardContent>
         </Card>

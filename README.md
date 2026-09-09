@@ -215,6 +215,16 @@ Six intervention types, each with a documented effect on albedo/vegetation/water
 | Blue Infrastructure | Ponds/wetlands/daylighted waterways for evaporative cooling |
 | Reflective Surfaces | High-albedo pavement/road treatments |
 
+### Interactive Scenario Presets (Zero-Config Testing)
+
+For recruiters and municipal decision-makers evaluating climate strategies, CoolGrid provides 5 curated, physics-calibrated presets that immediately configure the multi-intervention parameters:
+
+- **Reflective Cool Roofs (High Albedo / Fast Deploy)**: 60% cool roofs, 20% reflective pavement. Maximizes solar reflection with zero land or water consumption.
+- **Urban Canopy & Corridors (Biophilic Evapotranspiration)**: 30% street trees, 15% linear green corridors, 5% blue infrastructure. Focuses on biophilic shade and ambient humidity.
+- **Commercial Core Retrofit (Balanced Multi-Layer)**: 40% cool roofs, 25% intensive green roofs, 15% trees, 20% high-albedo pavements tailored for dense high-rise wards.
+- **Emergency Heatwave Shield (Hotspot Suppression)**: 65% cool roofs, 45% reflective pavements, 25% trees, 10% water bodies for extreme heat mitigation.
+- **Arid Passive Albedo (100% Water-Neutral)**: 75% cool roofs, 50% reflective surfaces specifically engineered for drought-sensitive microclimates.
+
 Adjusting any intervention's coverage slider genuinely changes the result: the simulation engine re-solves the physics energy balance under the perturbed surface attributes and Monte Carlo-samples weather noise (60 samples) for a real confidence interval — not a lookup table. Every run reports **baseline LST, simulated LST, expected cooling with confidence range, cost, land required, water required, population benefited, and risk-level change**, re-based onto the ward's actual detected LST so it's consistent with the rest of the app.
 
 ## Optimization
