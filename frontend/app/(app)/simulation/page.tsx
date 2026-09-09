@@ -16,7 +16,7 @@ import { RiskBadge } from "@/components/ui/risk-badge";
 import { CHART, heatColor } from "@/lib/colors";
 import { formatCurrency, formatNumber } from "@/lib/utils";
 import type { InterventionType, SimulationResult } from "@/lib/types";
-import { FlaskConical } from "lucide-react";
+import { FlaskConical, TrendingDown, DollarSign, Droplets, Users, ShieldCheck } from "lucide-react";
 
 function SimulationContent() {
   const router = useRouter();
@@ -132,17 +132,26 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
 
   const beforeAfterData = result
     ? [
-        { label: "Baseline", value: result.baseline_lst },
-        { label: "Simulated", value: result.simulated_lst },
+        { label: "Baseline LST", value: result.baseline_lst },
+        { label: "Simulated Post-Intervention", value: result.simulated_lst },
       ]
     : [];
 
+  // Derived comparative metrics
+  const costPerTenthDegree = result && result.expected_cooling_c > 0
+    ? result.cost_usd / (result.expected_cooling_c * 10)
+    : 0;
+
+  const waterPerDegree = result && result.expected_cooling_c > 0
+    ? result.water_m3_per_year / result.expected_cooling_c
+    : 0;
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">Simulate Interventions — {ward.data.name}</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Choose a recruiter/planner preset or adjust coverage for physics-based cooling simulation.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Choose an urban scenario preset or configure custom coverage for physics-based cooling simulation.</p>
         </div>
         <Button variant="outline" size="sm" onClick={onChangeWard}>
           Change ward
@@ -261,6 +270,7 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
         <Card>
           <CardHeader>
             <CardTitle>Simulation result</CardTitle>
+            <CardDescription>Physics-derived surface temperature reduction and environmental impacts.</CardDescription>
           </CardHeader>
           <CardContent>
             {!result ? (
@@ -292,13 +302,83 @@ function SimulationForWard({ wardId, onChangeWard }: { wardId: string; onChangeW
 
                 <div className="flex items-center justify-between rounded-lg border border-slate-200 p-3 text-sm dark:border-slate-800">
                   <span>Risk: <RiskBadge risk={result.baseline_risk} /> → <RiskBadge risk={result.simulated_risk} /></span>
-                  <span className="font-medium text-emerald-600">-{result.risk_reduction_pct}%</span>
+                  <span className="font-medium text-emerald-600">-{result.risk_reduction_pct}% Risk Reduction</span>
                 </div>
               </div>
             )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Baseline vs Intervention Comparative Delta Analysis */}
+      {result && (
+        <Card className="border-slate-200 dark:border-slate-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <TrendingDown className="h-4 w-4 text-emerald-600" />
+              Baseline vs. Intervention Comparative Analysis
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Direct quantification of cooling effectiveness, resource intensity, and population protection efficiency.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-lg border border-slate-100 bg-slate-50/70 p-3.5 dark:border-slate-800 dark:bg-slate-900/40">
+                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <TrendingDown className="h-3.5 w-3.5 text-emerald-500" />
+                  Net Delta LST (ΔT)
+                </div>
+                <div className="mt-1.5 text-xl font-bold text-emerald-600 dark:text-emerald-400">
+                  -{result.expected_cooling_c.toFixed(2)}°C
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  {result.baseline_lst.toFixed(1)}°C → {result.simulated_lst.toFixed(1)}°C
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-100 bg-slate-50/70 p-3.5 dark:border-slate-800 dark:bg-slate-900/40">
+                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <DollarSign className="h-3.5 w-3.5 text-blue-500" />
+                  Cost Efficiency
+                </div>
+                <div className="mt-1.5 text-xl font-bold text-slate-800 dark:text-slate-100">
+                  {costPerTenthDegree > 0 ? formatCurrency(costPerTenthDegree) : "N/A"}
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Per 0.1°C temperature reduction
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-100 bg-slate-50/70 p-3.5 dark:border-slate-800 dark:bg-slate-900/40">
+                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <Droplets className="h-3.5 w-3.5 text-cyan-500" />
+                  Water Intensity
+                </div>
+                <div className="mt-1.5 text-xl font-bold text-slate-800 dark:text-slate-100">
+                  {waterPerDegree > 0 ? `${formatNumber(Math.round(waterPerDegree))} m³` : "0 m³"}
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Annual water required per 1.0°C cooled
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-slate-100 bg-slate-50/70 p-3.5 dark:border-slate-800 dark:bg-slate-900/40">
+                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <Users className="h-3.5 w-3.5 text-indigo-500" />
+                  Protected Population
+                </div>
+                <div className="mt-1.5 text-xl font-bold text-slate-800 dark:text-slate-100">
+                  {formatNumber(result.population_benefited)}
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  {((result.population_benefited / (ward.data.population_total || 1)) * 100).toFixed(0)}% of ward population
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
