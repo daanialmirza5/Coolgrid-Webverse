@@ -9,6 +9,21 @@ on:
 jobs:
   backend-and-ml-tests:
     runs-on: ubuntu-latest
+    # tests/backend/conftest.py connects to coolgrid_test on localhost:5432
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: coolgrid
+          POSTGRES_PASSWORD: coolgrid_dev_password
+          POSTGRES_DB: coolgrid_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U coolgrid -d coolgrid_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,6 +39,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
           pip install -e ml/
+          pip install pytest
+
+      # Model artifacts under data/demo/ are gitignored; the backend tests load them.
+      - name: Generate synthetic demo data and train ML artifacts
+        working-directory: ./ml
+        run: python train.py
 
       - name: Run Backend & ML Unit Tests
         run: |
