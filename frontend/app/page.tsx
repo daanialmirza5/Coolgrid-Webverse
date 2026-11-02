@@ -96,7 +96,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t border-slate-200 px-6 py-6 text-center text-xs text-slate-400 dark:border-slate-800">
-        CoolGrid — Webverse 2026 Hackathon · Wadia College of Engineering, Pune
+        CoolGrid — Webverse 2026 Hackathon
       </footer>
     </div>
   );

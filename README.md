@@ -15,7 +15,7 @@
 DETECT → EXPLAIN → PREDICT → SIMULATE → OPTIMIZE
 ```
 
-Built for **Webverse 2026** by a team from Wadia College of Engineering, Pune.
+Built for **Webverse 2026**.
 
 > **DEMO DATA NOTICE**: This application runs entirely on a synthetic, clearly-labeled demonstration dataset for a Pune-*shaped* demo city. No real Landsat, Sentinel-2, ERA5, OpenStreetMap, or census data is used anywhere. The UI labels this everywhere it matters (dashboard badge, data sources page, PDF reports). See [Data Sources](#data-sources) and [docs/DATA.md](docs/DATA.md) for exactly how it's generated and why. The codebase is architected so real providers can be plugged in later with zero changes to the application logic that consumes them — see [providers/factory.py](ml/coolgrid_ml/providers/factory.py).
 
@@ -428,6 +428,6 @@ The project's direction, product decisions, requirements, architecture choices, 
 
 ## Author
 
-Built by **Team CoolGrid**, Wadia College of Engineering, Pune, for **Webverse 2026**.
+Maintained by **Daanial Mirza**. Built for **Webverse 2026**.
 
 GitHub: [@daanialmirza5](https://github.com/daanialmirza5)

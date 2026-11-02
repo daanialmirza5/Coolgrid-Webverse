@@ -6,7 +6,7 @@ Every observation, ward polygon, and derived value in this deployment is synthet
 
 ## Why Pune-shaped
 
-The demo city (`DEMO_CITY_NAME = "Pune (Demo Dataset)"`) uses Pune, India's approximate bounding box purely for a geographically plausible, recognizable map extent (the hackathon team is from Wadia College of Engineering, Pune). Ward geometry is a regular 6×4 grid — **not real administrative ward boundaries** — and every attribute is generated from a fixed random seed (42) for full reproducibility.
+The demo city (`DEMO_CITY_NAME = "Pune (Demo Dataset)"`) uses Pune, India's approximate bounding box purely for a geographically plausible, recognizable map extent. Ward geometry is a regular 6×4 grid — **not real administrative ward boundaries** — and every attribute is generated from a fixed random seed (42) for full reproducibility.
 
 ## Generation Pipeline
 
