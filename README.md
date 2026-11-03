@@ -428,6 +428,6 @@ The project's direction, product decisions, requirements, architecture choices, 
 
 ## Author
 
-Maintained by **Daanial Mirza**. Built for **Webverse 2026**.
+Maintained by **Daanial Baig**. Built for **Webverse 2026**.
 
 GitHub: [@daanialmirza5](https://github.com/daanialmirza5)
